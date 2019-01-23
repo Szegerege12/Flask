@@ -1,2 +1,2 @@
 # Flask
-Flask framework
+Flask framework - first web application microblog
