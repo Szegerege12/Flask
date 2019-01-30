@@ -13,6 +13,7 @@
             {% if current_user.is_annonymous %}
             <a href="{{ url_for ('login') }}">Login</a>
             {% else %}
+           <a href="{{ url_for ('user', username=current_user.username) }}">Profile</a>
             <a href="{{ url_for ('logout') }}">Logout</a>
             {% endif %}
         </div>
@@ -26,6 +27,17 @@
         </ul>
         {% endif %}
         {% endwith %}
-        {% block content %}{% endblock %}
+        {% block content %}
+            <table>
+                <tr valign="top">
+                    <td><img scr="{{ user.avatar(128) }}"></td>
+                    <td><h1>User: {{ user.username }}</h1></td>
+                </tr>
+            </table>
+            <hr>
+            {% for post in posts %}
+                {% include '_post.html' %}
+            {% endfor %}
+        {% endblock %}
     </body>
 </html>

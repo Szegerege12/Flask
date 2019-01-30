@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm  # import modułu do tworzenia logowania
-from wtforms import StringField, PasswordField, BooleanField, SubmitField  # import pól
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo  # validator - czyli coś co w tym przypadku sprawdzi czy pole nie jest puste
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField  # import pól
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length # validator - czyli coś co w tym przypadku sprawdzi czy pole nie jest puste
 from app.models import User
 
 
@@ -25,9 +25,14 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please enter a different username.')
 
-
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email adress.')
 
+
+class EditProfileForm(FlaskForm):
+    """Profile editor form"""
+    username = StringField('Username', validators=[DataRequired()])
+    about_me = TextAreaField('About me', validators=[Length(min=0, max = 140)])
+    submit = SubmitField('Submit')
