@@ -1,0 +1,19 @@
+2019-02-12 21:15:12,512 ERROR: Exception on /reset_password/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZXNldF9wYXNzd29yZCI6NSwiZXhwIjoxNTUwMDAzMDY0Ljk4OTY1MTJ9.lXP9Txt02OgcOwGR4FilyHSvXsUpWLq-scn2zGiX0eg [GET] [in d:\dev\microblog\venv\lib\site-packages\flask\app.py:1761]
+Traceback (most recent call last):
+  File "d:\dev\microblog\venv\lib\site-packages\flask\app.py", line 2292, in wsgi_app
+    response = self.full_dispatch_request()
+  File "d:\dev\microblog\venv\lib\site-packages\flask\app.py", line 1815, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "d:\dev\microblog\venv\lib\site-packages\flask\app.py", line 1718, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "d:\dev\microblog\venv\lib\site-packages\flask\_compat.py", line 35, in reraise
+    raise value
+  File "d:\dev\microblog\venv\lib\site-packages\flask\app.py", line 1813, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "d:\dev\microblog\venv\lib\site-packages\flask\app.py", line 1799, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "d:\dev\microblog\venv\app\routes.py", line 186, in reset_password
+    user = User.verify_reset_password_token(token)
+AttributeError: type object 'User' has no attribute 'verify_reset_password_token'
+2019-02-12 21:15:26,177 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:46]
+2019-02-12 21:21:26,604 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:46]
