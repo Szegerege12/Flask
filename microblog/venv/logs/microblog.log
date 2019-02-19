@@ -17,3 +17,4 @@ Traceback (most recent call last):
 AttributeError: type object 'User' has no attribute 'verify_reset_password_token'
 2019-02-12 21:15:26,177 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:46]
 2019-02-12 21:21:26,604 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:46]
+2019-02-19 16:19:20,298 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:74]
