@@ -1,4 +1,4 @@
-2019-02-12 21:15:12,512 ERROR: Exception on /reset_password/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyZXNldF9wYXNzd29yZCI6NSwiZXhwIjoxNTUwMDAzMDY0Ljk4OTY1MTJ9.lXP9Txt02OgcOwGR4FilyHSvXsUpWLq-scn2zGiX0eg [GET] [in d:\dev\microblog\venv\lib\site-packages\flask\app.py:1761]
+2019-02-22 14:52:03,263 ERROR: Exception on /search [GET] [in d:\dev\microblog\venv\lib\site-packages\flask\app.py:1761]
 Traceback (most recent call last):
   File "d:\dev\microblog\venv\lib\site-packages\flask\app.py", line 2292, in wsgi_app
     response = self.full_dispatch_request()
@@ -12,9 +12,32 @@ Traceback (most recent call last):
     rv = self.dispatch_request()
   File "d:\dev\microblog\venv\lib\site-packages\flask\app.py", line 1799, in dispatch_request
     return self.view_functions[rule.endpoint](**req.view_args)
-  File "d:\dev\microblog\venv\app\routes.py", line 186, in reset_password
-    user = User.verify_reset_password_token(token)
-AttributeError: type object 'User' has no attribute 'verify_reset_password_token'
-2019-02-12 21:15:26,177 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:46]
-2019-02-12 21:21:26,604 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:46]
-2019-02-19 16:19:20,298 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:74]
+  File "d:\dev\microblog\venv\lib\site-packages\flask_login\utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "d:\dev\microblog\venv\app\main\routes.py", line 144, in search
+    current_app.config['POSTS_PER_PAGE'])
+  File "d:\dev\microblog\venv\app\models.py", line 16, in search
+    ids, total = query_index(cls.__tablename__, expression, page, per_page)
+TypeError: 'NoneType' object is not iterable
+2019-02-22 14:52:22,564 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 14:54:07,347 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 14:55:27,363 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 14:59:09,291 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:00:10,865 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:01:42,588 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:03:03,984 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:06:21,799 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:08:13,100 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:08:58,720 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:17:09,191 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:26:27,733 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:28:23,471 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:31:47,381 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:32:55,475 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:37:31,527 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:38:29,164 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:41:20,135 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:50:35,380 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 15:55:19,680 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 16:05:03,802 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]
+2019-02-22 16:09:54,182 INFO: Microblog startup [in d:\dev\microblog\venv\app\__init__.py:77]

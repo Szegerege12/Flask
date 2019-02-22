@@ -12,13 +12,20 @@ from app.auth.email import send_password_reset_email
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
+    """Logowanie użytkownika. Funkcja sprawdza czy użytkownik jest już
+    zalogowany. Jeśli tak, przekierowuje do strony glownej. Jeśli nie
+    uruchamiany jest formularz LoginForm z forms.py który odpowiada za
+    logowanie użytkowników. Po naciśnięciu przycisku submit sprawdza czy
+    użytkownik jest w bazie, jesli nie wyświetla flash message jesli jest
+    w bazie i dane są poprawne, loguje.
+     """
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash(_('Invalid username or password'))
+            flash(_('Nieprawidłowa nazwa użytkownika lub hasło.'))
             return redirect(url_for('auth.login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
@@ -30,12 +37,21 @@ def login():
 
 @bp.route('/logout')
 def logout():
+    """Funkcja do wylogowywania użytkownika. Za pomocą flask-login.
+    Nie musimy określać kogo chcemy wylogowac. Logout_user sam to określa
+    """
     logout_user()
     return redirect(url_for('main.index'))
 
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
+    """Sprawdza czy użytkownik jest zalogowany. Jeśli tak nastepuje
+    przekierowanie do strony glownej. Jeśli nie, uruchamiany jest formularz
+    rejestracji z forms.py. Następuje rejestracja. Dodanie użytkownika
+    do bazy danych, i commit. Po udanej rejestracji uzytkownik widzi wiadomosc
+    flash. Następnie nastepuje przekierowanie do logowania.
+    """
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     form = RegistrationForm()
