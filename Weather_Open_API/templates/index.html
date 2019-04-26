@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form method="POST">
+    <input name="city" type="text" placeholder="City Name">
+    <button>
+        Add City
+    </button>
+</form>
+{% for weather in weather_data %}
+<h1>City: {{ weather.city }}</h1>
+<h3>Temperature: {{ weather.temperature }}° C</h3>
+<h3> {{ weather.description }} </h3>
+{% endfor %}
+<a href="/clear">Wyczysc miasta</a>
+</body>
+</html>
