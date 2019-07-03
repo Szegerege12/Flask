@@ -13,7 +13,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'tu-powinno-byc-cos-secret'
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
 app.config['JWT_BLACKLIST_ENABLED'] = True
-app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['acces', 'refresh']
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 
 jwt = JWTManager(app)
 
@@ -45,3 +45,4 @@ api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
 api.add_resource(resources.TokenRefresh, '/token/refresh')
 api.add_resource(resources.AllUsers, '/users')
 api.add_resource(resources.SecretResource, '/secret')
+api.add_resource(resources.PasswordChange, '/update')

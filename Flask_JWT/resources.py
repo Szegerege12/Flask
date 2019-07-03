@@ -2,6 +2,7 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from models import UserModel, RevokedTokenModel
+from run import db
 
 # inicjalizacja parsera
 parser = reqparse.RequestParser()
@@ -13,6 +14,7 @@ class UserRegistration(Resource):
     """Rejestracja userów, jesli istnieje zwraca komunikat.
     Jeśli nie korzysta z parsera, zbiera dane, hashuje haslo i
     zapisuje do bazy. Dodatkowo tworzy Bearer Token"""
+
     def post(self):
         data = parser.parse_args()
 
@@ -29,7 +31,6 @@ class UserRegistration(Resource):
             refresh_token = create_refresh_token(identity=data['username'])
             return {
                 'message': 'User {} was created'.format(data['username']),
-                'password' : data['password'],
                 'acces_token': acces_token,
                 'refresh_token': refresh_token
             }
@@ -38,6 +39,10 @@ class UserRegistration(Resource):
 
 
 class UserLogin(Resource):
+    """Logowanie uzytkownika, wymagane username i haslo, jesli jest
+    prawidlowe to zwraca dane oraz bearer token który jest uzywany
+    przy wymaganych zapytaniach"""
+
     def post(self):
         data = parser.parse_args()
         current_user = UserModel.find_by_username(data['username'])
@@ -55,6 +60,31 @@ class UserLogin(Resource):
             }
         else:
             return {'message': 'Wrong credentials'}
+
+
+class PasswordChange(Resource):
+    """Zmiana hasla, sprawdza czy podane dane sa prawidlowe, nastepnie
+    zmienia haslo na podane w new_password po czym dokonuje update
+    bazy danych. Wymagany jest także toekn uzyskiwany podczas logowania"""
+
+    @jwt_required
+    def put(self):
+        parser.add_argument('new_password', help='New Password')
+        data = parser.parse_args()
+        current_user = UserModel.find_by_username(data['username'])
+        if not current_user:
+            return {'message': 'User {} doesnt exist'.format(data['username'])}
+
+        if UserModel.verify_hash(data['password'], current_user.password):
+            try:
+                current_user.password = UserModel.generate_hash(data['new_password'])
+                db.session.commit()
+                return {
+                    'login': current_user.username,
+                    'new password': current_user.password
+                }
+            except:
+                return {'message': 'something went wrong'}
 
 
 class UserLogoutAcces(Resource):

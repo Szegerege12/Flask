@@ -47,7 +47,7 @@ class UserModel(db.Model):
 
 class RevokedTokenModel(db.Model):
     """Lista blacklist tokenow, uzywanych do wylogowywania"""
-    __tablename__='revoked_tokens'
+    __tablename__ = 'revoked_tokens'
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.String(120))
 
