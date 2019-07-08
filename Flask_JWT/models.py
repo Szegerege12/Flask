@@ -21,6 +21,7 @@ class UserModel(db.Model):
     def return_all(cls):
         def to_json(x):
             return {
+                'id': x.id,
                 'username': x.username,
                 'password': x.password
             }

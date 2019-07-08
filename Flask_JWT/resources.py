@@ -14,7 +14,6 @@ class UserRegistration(Resource):
     """Rejestracja userów, jesli istnieje zwraca komunikat.
     Jeśli nie korzysta z parsera, zbiera dane, hashuje haslo i
     zapisuje do bazy. Dodatkowo tworzy Bearer Token"""
-
     def post(self):
         data = parser.parse_args()
 
@@ -27,11 +26,11 @@ class UserRegistration(Resource):
         )
         try:
             new_user.save_to_db()
-            acces_token = create_access_token(identity=data['username'])
+            access_token = create_access_token(identity=data['username'])
             refresh_token = create_refresh_token(identity=data['username'])
             return {
                 'message': 'User {} was created'.format(data['username']),
-                'acces_token': acces_token,
+                'acces_token': access_token,
                 'refresh_token': refresh_token
             }
         except:
@@ -50,12 +49,12 @@ class UserLogin(Resource):
             return {'message': 'User {} doesnt exist'.format(data['username'])}
 
         if UserModel.verify_hash(data['password'], current_user.password):
-            acces_token = create_access_token(identity=data['username'])
+            access_token = create_access_token(identity=data['username'])
             refresh_token = create_refresh_token(identity=data['username'])
             return {
                 'message': 'Logged in as {}'.format(current_user.username),
                 'password': current_user.password,
-                'acces_token': acces_token,
+                'acces_token': access_token,
                 'refresh_token': refresh_token
             }
         else:
@@ -106,7 +105,7 @@ class UserLogoutRefresh(Resource):
         try:
             revoked_token = RevokedTokenModel(jti=jti)
             revoked_token.add()
-            return {'message': 'Acces token has been revoked'}
+            return {'message': 'Access token has been revoked'}
         except:
             return {'message': 'Something went wrong.'}, 500
 
@@ -118,8 +117,11 @@ class TokenRefresh(Resource):
     @jwt_refresh_token_required
     def post(self):
         current_user = get_jwt_identity()
-        acces_token = create_access_token(identity=current_user)
-        return {'acces_token': acces_token}
+        access_token = create_access_token(identity=current_user)
+        return {
+            'username': current_user,
+            'new_access_token': access_token
+        }
 
 
 class AllUsers(Resource):
