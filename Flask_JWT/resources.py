@@ -187,38 +187,24 @@ def get_paginated_list(klass, url, start, limit):
 def get_paginated_list_filter(klass, url, start, limit, query):
     start = int(start)
     limit = int(limit)
-    # check if page exists
     results = klass
-    # count = (len(results))
-    # if count < start:
-    # abort(404)
 
-    # make response
-    obj = {'sss': 'ss'}
-    obj['start'] = start
-    obj['limit'] = limit
-    #obj['phrase'] = phrase
-
-    # obj['count'] = count
-    # make URLs
-    # make previous url
+    obj = {'page':{}}
     if start == 1:
-        obj['previous'] = ''
+        obj['page']['previous'] = ''
     else:
         start_copy = max(1, start - limit)
         limit_copy = limit
-        obj['previous'] = url + '?query=%s&start=%d&limit=%d' % (query, start_copy, limit)
+        obj['page']['previous'] = url + '?query=%s&start=%d&limit=%d' % (query, start_copy, limit)
 
-    # make next url
     if start + limit < 1:
-        obj['next'] = ''
+        obj['page']['next'] = ''
     else:
         start_copy = start + limit
-        obj['next'] = url + '?query=%s&start=%d&limit=%d' % (query, start_copy, limit)
+        obj['page']['next'] = url + '?query=%s&start=%d&limit=%d' % (query, start_copy, limit)
 
-    # finally extract result according to bounds
-    start_offset = start - 1
     obj['results'] = results[(start - 1):(start - 1 + limit)]
+
     return obj
 
 
