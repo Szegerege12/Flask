@@ -1,8 +1,20 @@
 from run import db
 from passlib.hash import pbkdf2_sha256 as sha256
+import random, string
+
+from sqlalchemy import inspect
 
 
-class UserModel(db.Model):
+class Serializer(object):
+    def serialize(self):
+        return {c: getattr(self, c) for c in inspect(self).attrs.keys()}
+
+    @staticmethod
+    def serialize_list(l):
+        return [m.serialize() for m in l]
+
+
+class UserModel(db.Model, Serializer):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -12,6 +24,16 @@ class UserModel(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+
+    @staticmethod
+    def random_username():
+        username = string.ascii_lowercase
+        return ''.join(random.choice(username) for i in range(12))
+
+    @staticmethod
+    def random_password():
+        password = string.ascii_lowercase
+        return ''.join(random.choice(password) for i in range(12))
 
     @classmethod
     def find_by_username(cls, username):
@@ -27,6 +49,17 @@ class UserModel(db.Model):
             }
 
         return {'users': list(map(lambda x: to_json(x), UserModel.query.all()))}
+
+    @classmethod
+    def return_users(cls, username):
+        def to_json(x):
+            return {
+                'id': x.id,
+                'username': x.username,
+                'password': x.password
+            }
+
+        return {'users': list(map(lambda x: to_json(x), UserModel.query.filter_by(username=username)))}
 
     @classmethod
     def delete_all(cls):

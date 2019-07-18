@@ -1,5 +1,5 @@
-from flask import Flask
-from flask_restful import Api, reqparse
+from flask import Flask, request, jsonify, abort
+from flask_restful import Api, reqparse, Resource
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
@@ -46,7 +46,9 @@ api.add_resource(resources.UserLogin, '/login') #done
 api.add_resource(resources.UserLogoutAcces, '/logout/acces')
 api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
 api.add_resource(resources.TokenRefresh, '/token/refresh') # done
-api.add_resource(resources.AllUsers, '/users') #done
+api.add_resource(resources.AllUsers, '/users/page') #done
 api.add_resource(resources.SecretResource, '/secret')
 api.add_resource(resources.PasswordChange, '/update') #done
+api.add_resource(resources.UserGenerate, '/generate') # generate 100 users random
+api.add_resource(resources.UserFilter,'/filter')
 

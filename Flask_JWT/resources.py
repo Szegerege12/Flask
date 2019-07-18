@@ -1,8 +1,10 @@
+from flask import Flask, abort, request, jsonify
 from flask_restful import Resource, reqparse
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt)
 from models import UserModel, RevokedTokenModel
 from run import db
+import json
 
 # inicjalizacja parsera
 parser = reqparse.RequestParser()
@@ -14,6 +16,7 @@ class UserRegistration(Resource):
     """Rejestracja userów, jesli istnieje zwraca komunikat.
     Jeśli nie korzysta z parsera, zbiera dane, hashuje haslo i
     zapisuje do bazy. Dodatkowo tworzy Bearer Token"""
+
     def post(self):
         data = parser.parse_args()
 
@@ -86,6 +89,18 @@ class PasswordChange(Resource):
                 return {'message': 'something went wrong'}
 
 
+class UserGenerate(Resource):
+    """Generate 100 random users"""
+
+    def post(self):
+        for i in range(1, 3000):
+            new_user = UserModel(
+                username=UserModel.random_username(),
+                password=UserModel.generate_hash(UserModel.random_password())
+            )
+            new_user.save_to_db()
+
+
 class UserLogoutAcces(Resource):
     @jwt_required
     def post(self):
@@ -124,12 +139,72 @@ class TokenRefresh(Resource):
         }
 
 
+def get_paginated_list(klass, url, start, limit):
+    """
+    Return paginated list of db Model
+    :param klass: dbModel to paginate
+    :param url: Api resource url to create next/prev link
+    :param start: starting position
+    :param limit: limit of position per one page
+    :return: paginated list with set parameters
+    """
+    start = int(start)
+    limit = int(limit)
+    # check if page exists
+    results = klass.return_all()
+    # count = (len(results))
+    # if count < start:
+    # abort(404)
+
+    # make response
+    obj = {}
+    obj['start'] = start
+    obj['limit'] = limit
+
+    # obj['count'] = count
+    # make URLs
+    # make previous url
+    if start == 1:
+        obj['previous'] = ''
+    else:
+        start_copy = max(1, start - limit)
+        limit_copy = limit
+        obj['previous'] = url + '?start=%d&limit=%d' % (start_copy, limit_copy)
+
+    # make next url
+    if start + limit < 1:
+        obj['next'] = ''
+    else:
+        start_copy = start + limit
+        obj['next'] = url + '?start=%d&limit=%d' % (start_copy, limit)
+
+    # finally extract result according to bounds
+    start_offset = start - 1
+    obj['results'] = results['users'][start_offset:start_offset + limit]
+    return obj
+
+
 class AllUsers(Resource):
     def get(self):
-        return UserModel.return_all()
+        return jsonify(get_paginated_list(
+            UserModel,
+            'users/page',
+            start=request.args.get('start', 1),
+            limit=request.args.get('limit', 20)
+        ))
 
     def delete(self):
         return UserModel.delete_all()
+
+
+class UserFilter(Resource):
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('username', help='This field cannot be blank', required=True)
+        data = parser.parse_args()
+        current_users = UserModel.serialize_list(UserModel.query.filter(UserModel.username.like('%' + data['username'] + '%')).all())
+
+        return current_users
 
 
 class SecretResource(Resource):
