@@ -184,6 +184,44 @@ def get_paginated_list(klass, url, start, limit):
     return obj
 
 
+def get_paginated_list_filter(klass, url, start, limit, query):
+    start = int(start)
+    limit = int(limit)
+    # check if page exists
+    results = klass
+    # count = (len(results))
+    # if count < start:
+    # abort(404)
+
+    # make response
+    obj = {'sss': 'ss'}
+    obj['start'] = start
+    obj['limit'] = limit
+    #obj['phrase'] = phrase
+
+    # obj['count'] = count
+    # make URLs
+    # make previous url
+    if start == 1:
+        obj['previous'] = ''
+    else:
+        start_copy = max(1, start - limit)
+        limit_copy = limit
+        obj['previous'] = url + '?query=%s&start=%d&limit=%d' % (query, start_copy, limit)
+
+    # make next url
+    if start + limit < 1:
+        obj['next'] = ''
+    else:
+        start_copy = start + limit
+        obj['next'] = url + '?query=%s&start=%d&limit=%d' % (query, start_copy, limit)
+
+    # finally extract result according to bounds
+    start_offset = start - 1
+    obj['results'] = results[(start - 1):(start - 1 + limit)]
+    return obj
+
+
 class AllUsers(Resource):
     def get(self):
         return jsonify(get_paginated_list(
@@ -202,9 +240,15 @@ class UserFilter(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('username', help='This field cannot be blank', required=True)
         data = parser.parse_args()
-        current_users = UserModel.serialize_list(UserModel.query.filter(UserModel.username.like('%' + data['username'] + '%')).all())
-
-        return current_users
+        current_users = UserModel.serialize_list(UserModel.query.filter(
+            UserModel.username.like('%' + data['username'] + '%')).all())
+        return jsonify(get_paginated_list_filter(
+            current_users,
+            'filter',
+            start=request.args.get('start', 1),
+            limit=request.args.get('limit', 20),
+            query=data['username']
+        ))
 
 
 class SecretResource(Resource):

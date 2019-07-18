@@ -39,9 +39,12 @@ function nextPage() {
 
 
 document.getElementById('showUserInputForm').addEventListener('submit', searchByUsername);
+let nextPageUrl = null;
+let previousPageUrl = null;
+
 function searchByUsername(url) {
   if (!url) {
-    url = baseUrl + 'filter'
+    url = baseUrl + 'filter';
   }
   var searchUsername = document.getElementById('searchUsername').value;
   var pageLimit = document.getElementById('pageLimit').value;
@@ -57,7 +60,7 @@ function searchByUsername(url) {
   })
     .then(function (response) {
      resultElement.innerHTML = generateSuccessHTMLOutput(response);
-     nextPageUrl = baseUrl + response.data.next;
+     nextPageUrl = baseUrl + response.data.next
      previousPageUrl = baseUrl + response.data.previous;
     })
     .catch(function (error) {
