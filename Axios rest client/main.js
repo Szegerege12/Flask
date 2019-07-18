@@ -1,15 +1,79 @@
-function performGetRequest1(){
+document.getElementById('showUserInputForm').addEventListener('submit', performGetRequest1);
+let nextUrl = null;
+let previousUrl = null;
+baseUrl = 'http://127.0.0.1:5000/';
+
+function performGetRequest1(url){
+
+  if (!url) {
+    url = baseUrl + 'users/page'
+  }
+  var limit = document.getElementById('limit').value;
   var resultElement = document.getElementById('getResult1');
   resultElement.innerHTML = '';
+  
 
-  axios.get('http://127.0.0.1:5000/users')
+  axios.get(url, {
+    params: {
+      limit:limit
+    }
+  })
     .then(function (response) {
-      resultElement.innerHTML = generateSuccessHTMLOutput(response);
+     resultElement.innerHTML = generateSuccessHTMLOutput(response);
+     nextUrl = baseUrl + response.data.next;
+     previousUrl = baseUrl + response.data.previous;
     })
     .catch(function (error) {
-      resultElement.innerHTML = generateErrorHTMLOutput(error);
+     resultElement.innerHTML = generateErrorHTMLOutput(error);
     });
 }
+
+function previousPage() {
+	performGetRequest1(previousUrl);
+}
+
+function nextPage() {
+	performGetRequest1(nextUrl);
+}
+
+
+
+document.getElementById('showUserInputForm').addEventListener('submit', searchByUsername);
+function searchByUsername(url) {
+  if (!url) {
+    url = baseUrl + 'filter'
+  }
+  var searchUsername = document.getElementById('searchUsername').value;
+  var pageLimit = document.getElementById('pageLimit').value;
+  var resultElement = document.getElementById('getResult2');
+  resultElement.innerHTML = '';
+  
+
+  axios.get(url, {
+    params: {
+      username:searchUsername,
+      limit:pageLimit
+    }
+  })
+    .then(function (response) {
+     resultElement.innerHTML = generateSuccessHTMLOutput(response);
+     nextPageUrl = baseUrl + response.data.next;
+     previousPageUrl = baseUrl + response.data.previous;
+    })
+    .catch(function (error) {
+     resultElement.innerHTML = generateErrorHTMLOutput(error);
+    });
+}
+
+function nextPageFilter() {
+	searchByUsername(nextPageUrl);
+}
+
+function previousPageFilter() {
+  searchByUsername(previousPageUrl)
+}
+
+
 
 
 function generateSuccessHTMLOutput(response) {
@@ -147,5 +211,7 @@ function clearOutput() {
     var resultElement = document.getElementById('updateResult');
     resultElement.innerHTML = '';
     var resultElement = document.getElementById('refreshResult');
+    resultElement.innerHTML = '';
+    var resultElement = document.getElementById('getResult2');
     resultElement.innerHTML = '';
 }

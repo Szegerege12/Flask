@@ -20,11 +20,58 @@
       <div class="card border-primary mb-3" style="max-width: 70rem;">
         <div class="card-title">GET /users </div>
           <div class="card-body">
+            <form class="form-inline" id="showUserInputForm" placeholder="showUserInputForm">
+              <div class="form-group"><br>
+                <label for="exampleSelect1">Positions per page:</label>
+                  <select class="form-control" id="limit">
+                    <option>10</option>
+                    <option>50</option>
+                    <option>100</option>
+                    <option>500</option>
+                    <option>1000</option>
+                  </select>
+          </form><br>
+        </div>
             <button class="btn btn-primary" onclick="performGetRequest1()">GET</button>
             <button class="btn btn-warning" onclick="clearOutput()">Clear</button>
-            <div class="panel-body" id="getResult1"></div>
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-secondary" onclick="previousPage()">Prev</button>
+              <button type="button" class="btn btn-secondary" onclick="nextPage()">Next</button>
+            </div>
+              <div class="panel-body" id="getResult1"></div>
           </div>
       </div>
+
+      <div class="card border-primary mb-3" style="max-width: 70rem;">
+        <div class="card-title">GET /users/filter by username 
+          <div class="card-body">
+             <form class="form-inline" id="searchUserInputForm" placeholder="SearchUserInputForm">
+                <div class="form-group"><br>
+                  <label for="exampleSelect1">Positions per page:</label>
+                      <select class="form-control" id="pageLimit">
+                        <option>10</option>
+                        <option>50</option>
+                        <option>100</option>
+                        <option>500</option>
+                        <option>1000</option>
+                      </select>
+                    </form></br>
+                  </div>
+                      <label class="col-form-label" for="inputDefault">Search by username:</label>
+                      <input type="text" class="form-control" placeholder="Enter username" id="searchUsername">
+                      <div class="btn-group" role="group" aria-label="Basic example">
+                          <button type="button" class="btn btn-primary" onclick="searchByUsername()">Search</button>
+                          <button class="btn btn-warning" onclick="clearOutput()">Clear</button>
+                          <button type="button" class="btn btn-secondary" onclick="previousPageFilter()">Prev</button>
+                          <button type="button" class="btn btn-secondary" onclick="nextPageFilter()">Next</button>
+                      </div>
+                      <div class="panel-body" id="getResult2"></div>
+                </div>
+              </div>
+      </div>
+
+      
+
 
       <div class="card border-primary mb-3" style="max-width: 70rem;">
         <div class="card-title">POST /registration </div>
